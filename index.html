@@ -38,45 +38,103 @@
       }
     }
   </script>
-  <style>
-    :where([class^="ri-"])::before {
-      content: "\f3c2";
+  <style>:where([class^="ri-"])::before {
+    content: "\f3c2";
+  }
+  
+  body {
+    font-family: 'Montserrat', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Added transition for smooth mode toggle */
+  }
+  
+  .cinzel {
+    font-family: 'Cinzel', serif;
+  }
+  
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  @media (max-width: 640px) {
+    .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
     }
-
-    body {
-      font-family: 'Montserrat', sans-serif;
+  
+    .section {
+      padding-top: 3rem;
+      padding-bottom: 3rem;
     }
-
-    .cinzel {
-      font-family: 'Cinzel', serif;
+  
+    .modal-content {
+      margin: 1rem;
+      max-height: calc(100vh - 2rem);
+      overflow-y: auto;
     }
-
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    @media (max-width: 640px) {
-      .container {
-        padding-left: 1rem;
-        padding-right: 1rem;
-      }
-
-      .section {
-        padding-top: 3rem;
-        padding-bottom: 3rem;
-      }
-
-      .modal-content {
-        margin: 1rem;
-        max-height: calc(100vh - 2rem);
-        overflow-y: auto;
-      }
-    }
+  }
+  
+  .dark-mode {
+    background-color: #1A1A1A !important;
+    color: #EAEAEA !important;
+  }
+  
+  .dark-mode * {
+    background-color: inherit !important;
+    color: inherit !important;
+  }
+  
+  .dark-mode nav {
+    background-color: #333 !important;
+  }
+  
+  .dark-mode .bg-light,
+  .dark-mode .bg-white {
+    background-color: #262626 !important;
+  }
+  
+  .dark-mode .text-black,
+  .dark-mode .text-gray-600 {
+    color: #EAEAEA !important;
+  }
+  
+  .dark-mode .border-gray-100 {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+  }
+  
+  /* Fix buttons and cards */
+  .dark-mode button,
+  .dark-mode .bg-primary {
+    background-color: #0A4D68 !important;
+    color: #FFFFFF !important;
+  }
+  
+  .dark-mode .bg-secondary {
+    background-color: #C5A572 !important;
+    color: #1A1A1A !important;
+  }
+  
+  .dark-mode input,
+  .dark-mode textarea,
+  .dark-mode select {
+    background-color: #333 !important;
+    color: #EAEAEA !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+  }
+  
+  .dark-mode .bg-gradient-to-t {
+    background: linear-gradient(to top, #1A1A1A, transparent) !important;
+  }
+  
+  /* Apply transition to dark mode */
+  body, .dark-mode {
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition between modes */
+  }
+  
   </style>
 </head>
 
-<body class="bg-light">
+<body class="bg-light text-black" id="body">
   <nav class="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
       <div class="flex items-center justify-between h-16 sm:h-20">
@@ -97,6 +155,15 @@
             onclick="toggleMobileMenu()">
             <i class="ri-menu-line text-2xl"></i>
           </button>
+          <div class="flex justify-center items-center"
+            style="display: flex; justify-content: center; align-items: center;">
+            <button id="darkModeToggle" onclick="toggleDarkMode()"
+              style="width: 64px; height: 64px; background-color: rgba(10, 77, 104, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform 0.3s; cursor: pointer;">
+              <i id="theme-icon" class="ri-moon-line" style="color: #0A4D68; font-size: 24px;"></i>
+            </button>
+          </div>
+
+
         </div>
       </div>
     </div>
@@ -107,10 +174,10 @@
         <a href="#services" class="block py-2 text-gray-600 hover:text-primary transition-colors">Services</a>
         <a href="#work" class="block py-2 text-gray-600 hover:text-primary transition-colors">Expertise</a>
         <a href="#testimonials" class="block py-2 text-gray-600 hover:text-primary transition-colors">Members</a>
-          <a href="#contact" class="block py-2 text-gray-600 hover:text-primary transition-colors">Contact</a>
-          <button onclick="openModal()"
-            class="w-full bg-primary text-white px-6 py-2 !rounded-button hover:bg-primary/90 transition-colors whitespace-nowrap mt-4">Get
-            Started</button>
+        <a href="#contact" class="block py-2 text-gray-600 hover:text-primary transition-colors">Contact</a>
+        <button onclick="openModal()"
+          class="w-full bg-primary text-white px-6 py-2 !rounded-button hover:bg-primary/90 transition-colors whitespace-nowrap mt-4">Get
+          Started</button>
       </div>
     </div>
     <script>
@@ -134,7 +201,7 @@
         });
       });
     </script>
-    
+
     <script>
       function openModal() {
         document.getElementById('getStartedModal').classList.remove('hidden');
@@ -363,7 +430,7 @@
           </div>
         </div>
         <div class="relative">
-          <img src="https://public.readdy.ai/ai/img_res/df38f8625a91b5a2b55cc7a03e2f57ad.jpg" alt="Marketing Excellence"
+          <img src="cover.png" alt="Marketing Excellence"
             class="rounded-xl shadow-2xl">
         </div>
       </div>
@@ -781,14 +848,14 @@
               </div>
               <div>
                 <h4 class="font-bold text-primary">Follow Us on Instagram</h4>
-                <a href="https://www.instagram.com/arcanum.marketing" target="_blank"
+                <a href="https://www.instagram.com/marketing.arcanum" target="_blank"
                   class="text-gray-600 hover:text-primary transition-colors flex items-center group">
-                  @arcanum.marketing
+                  @marketing.arcanum
                   <i class="ri-external-link-line ml-1 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                 </a>
               </div>
             </div>
-            
+
           </div>
         </div>
         <div class="bg-white p-8 rounded-xl shadow-lg">
@@ -951,7 +1018,8 @@
       </div>
     </div>
   </section>
-  <footer class="bg-primary text-white py-16">
+  <footer class="bg-primary text-white py-16 dark-mode:bg-gray-900 dark-mode:text-gray-300">
+
     <div class="max-w-7xl mx-auto px-6">
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12">
         <div>
@@ -1214,6 +1282,37 @@
       updateActiveSection();
     });
   </script>
+  <script>
+     document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("darkModeToggle");
+    const body = document.body;
+    const themeIcon = document.getElementById("theme-icon");
+
+    // Apply dark mode if previously enabled
+    if (localStorage.getItem("darkMode") === "enabled") {
+      body.classList.add("dark-mode");
+      themeIcon.classList.remove("ri-moon-line");
+      themeIcon.classList.add("ri-sun-line"); // Change to sun icon
+    }
+
+    toggleBtn.addEventListener("click", function () {
+      body.classList.toggle("dark-mode");
+
+      if (body.classList.contains("dark-mode")) {
+        localStorage.setItem("darkMode", "enabled");
+        themeIcon.classList.remove("ri-moon-line");
+        themeIcon.classList.add("ri-sun-line"); // Change to sun icon
+      } else {
+        localStorage.setItem("darkMode", "disabled");
+        themeIcon.classList.remove("ri-sun-line");
+        themeIcon.classList.add("ri-moon-line"); // Change to moon icon
+      }
+    });
+  });
+  </script>
+  
+
+
 </body>
 
 </html>
