@@ -13,11 +13,12 @@
     rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
   <script>
+    localStorage.setItem("darkMode", "enabled");
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            primary: '#0A4D68',
+            primary: 'var(--color-primary)',
             secondary: '#C5A572',
             dark: '#1A1A1A',
             light: '#F5F5F5'
@@ -43,8 +44,21 @@
       content: "\f3c2";
     }
 
+    :root {
+      --color-primary: #0A4D68;
+      /* Default primary color */
+    }
+
+    .dark-mode {
+      --color-primary: #000018;
+      /* New primary color in dark mode */
+    }
+
+
     body {
       font-family: 'Montserrat', sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      /* Added transition for smooth mode toggle */
     }
 
     .cinzel {
@@ -73,21 +87,96 @@
         overflow-y: auto;
       }
     }
+
+    .dark-mode {
+      background-color: #181830 !important;
+      color: #EAEAEA !important;
+    }
+
+    .dark-mode * {
+      background-color: inherit !important;
+      color: inherit !important;
+    }
+
+    .dark-mode nav {
+      background-color: #000018 !important;
+    }
+
+    .dark-mode .bg-light,
+    .dark-mode .bg-white {
+      background-color: #21213b !important;
+    }
+
+    .dark-mode .text-black,
+    .dark-mode .text-gray-600 {
+      color: #EAEAEA !important;
+    }
+
+    .dark-mode .border-gray-100 {
+      border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    /* Fix buttons and cards */
+    .dark-mode button,
+    .dark-mode .bg-primary {
+      background-color: #0b0b2e !important;
+      color: #FFFFFF !important;
+    }
+
+    .dark-mode .bg-secondary {
+      background-color: #C5A572 !important;
+      color: #1A1A1A !important;
+    }
+
+    .dark-mode input,
+    .dark-mode textarea,
+    .dark-mode select {
+      background-color: #333 !important;
+      color: #EAEAEA !important;
+      border-color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    .dark-mode .bg-gradient-to-t {
+      background: linear-gradient(to top, #000018, transparent) !important;
+    }
+
+    .member-card {
+      background-color: #F0F0F0 !important;
+      /* Light mode background */
+      color: #000;
+    }
+
+    .dark-mode .member-card {
+      background-color: #181830 !important;
+    }
+
+    .dark-mode .service-card {
+      background-color: #181830 !important;
+    }
+
+    /* Apply transition to dark mode */
+    body,
+    .dark-mode {
+      transition: background-color 0.3s ease, color 0.3s ease;
+      /* Smooth transition between modes */
+    }
+
+
   </style>
 </head>
 
-<body class="bg-light">
+<body class="bg-light text-black" id="body">
   <nav class="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
       <div class="flex items-center justify-between h-16 sm:h-20">
         <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;"
           class="cinzel text-2xl sm:text-3xl font-bold text-primary">Arcanum</a>
         <div class="hidden md:flex space-x-8">
-          <a href="#about" class="text-gray-600 hover:text-primary transition-colors">About</a>
-          <a href="#services" class="text-gray-600 hover:text-primary transition-colors">Services</a>
-          <a href="#work" class="text-gray-600 hover:text-primary transition-colors">Expertise</a>
-          <a href="#testimonials" class="text-gray-600 hover:text-primary transition-colors">Members</a>
-          <a href="#contact" class="text-gray-600 hover:text-primary transition-colors">Contact</a>
+          <a href="#about" class="text-gray-600 hover:text-primary transition-colors nav-elements">About</a>
+          <a href="#services" class="text-gray-600 hover:text-primary transition-colors nav-element">Services</a>
+          <a href="#work" class="text-gray-600 hover:text-primary transition-colors nav-element">Expertise</a>
+          <a href="#testimonials" class="text-gray-600 hover:text-primary transition-colors nav-element">Members</a>
+          <a href="#contact" class="text-gray-600 hover:text-primary transition-colors nav-element">Contact</a>
         </div>
         <div class="flex items-center gap-4">
           <button onclick="openModal()"
@@ -97,6 +186,15 @@
             onclick="toggleMobileMenu()">
             <i class="ri-menu-line text-2xl"></i>
           </button>
+          <div class="flex justify-center items-center"
+            style="display: flex; justify-content: center; align-items: center;">
+            <button id="darkModeToggle" onclick="toggleDarkMode()"
+              style="width: 64px; height: 64px; background-color: rgba(10, 77, 104, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform 0.3s; cursor: pointer;">
+              <i id="theme-icon" class="ri-moon-line" style="color: #0A4D68; font-size: 24px;"></i>
+            </button>
+          </div>
+
+
         </div>
       </div>
     </div>
@@ -363,8 +461,7 @@
           </div>
         </div>
         <div class="relative">
-          <img src="https://public.readdy.ai/ai/img_res/df38f8625a91b5a2b55cc7a03e2f57ad.jpg" alt="Marketing Excellence"
-            class="rounded-xl shadow-2xl">
+          <img src="cover.png" alt="Marketing Excellence" class="rounded-xl shadow-2xl">
         </div>
       </div>
     </div>
@@ -642,7 +739,7 @@
         </p>
       </div>
       <div class="grid md:grid-cols-2 gap-8">
-        <div class="bg-white p-8 rounded-xl shadow-lg">
+        <div class="bg-white p-8 rounded-xl shadow-lg member-card">
           <div class="flex items-center mb-6">
             <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
               <i class="ri-user-line text-gray-600 text-xl"></i>
@@ -658,7 +755,7 @@
             team to create visually striking and strategically thought-out campaigns.
           </p>
         </div>
-        <div class="bg-white p-8 rounded-xl shadow-lg">
+        <div class="bg-white p-8 rounded-xl shadow-lg member-card">
           <div class="flex items-center mb-6">
             <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
               <i class="ri-user-line text-gray-600 text-xl"></i>
@@ -674,7 +771,7 @@
             online presence. By combining marketing and web development, I craft effective strategies that deliver
             measurable results and long-term value for clients.</p>
         </div>
-        <div class="bg-white p-8 rounded-xl shadow-lg">
+        <div class="bg-white p-8 rounded-xl shadow-lg member-card">
           <div class="flex items-center mb-6">
             <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
               <i class="ri-user-line text-gray-600 text-xl"></i>
@@ -690,7 +787,7 @@
             also engages audiences. Marketing without data is guessing – and I don’t guess, I deliver results.
           </p>
         </div>
-        <div class="bg-white p-8 rounded-xl shadow-lg">
+        <div class="bg-white p-8 rounded-xl shadow-lg member-card">
           <div class="flex items-center mb-6">
             <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
               <i class="ri-user-line text-gray-600 text-xl"></i>
@@ -708,7 +805,7 @@
           </p>
         </div>
 
-        <div class="bg-white p-8 rounded-xl shadow-lg">
+        <div class="bg-white p-8 rounded-xl shadow-lg member-card">
           <div class="flex items-center mb-6">
             <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
               <i class="ri-user-line text-gray-600 text-xl"></i>
@@ -781,9 +878,9 @@
               </div>
               <div>
                 <h4 class="font-bold text-primary">Follow Us on Instagram</h4>
-                <a href="https://www.instagram.com/arcanum.marketing" target="_blank"
+                <a href="https://www.instagram.com/marketing.arcanum" target="_blank"
                   class="text-gray-600 hover:text-primary transition-colors flex items-center group">
-                  @arcanum.marketing
+                  @marketing.arcanum
                   <i class="ri-external-link-line ml-1 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                 </a>
               </div>
@@ -951,7 +1048,8 @@
       </div>
     </div>
   </section>
-  <footer class="bg-primary text-white py-16">
+  <footer class="bg-primary text-white py-16 dark-mode:bg-gray-900 dark-mode:text-gray-300">
+
     <div class="max-w-7xl mx-auto px-6">
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12">
         <div>
@@ -973,19 +1071,36 @@
         <div>
           <h4 class="font-bold text-xl mb-6">Services</h4>
           <ul class="space-y-4">
-            <li><a href="#services" data-service="digital-strategy"
-                class="service-link text-white/80 hover:text-white transition-all duration-300 px-4 py-2 -mx-4 rounded-lg relative">Digital
-                Strategy<span class="glow-effect"></span></a></li>
-            <li><a href="#services" data-service="brand-development"
-                class="service-link text-white/80 hover:text-white transition-all duration-300 px-4 py-2 -mx-4 rounded-lg relative">Brand
-                Development<span class="glow-effect"></span></a></li>
-            <li><a href="#services" data-service="content-marketing"
-                class="service-link text-white/80 hover:text-white transition-all duration-300 px-4 py-2 -mx-4 rounded-lg relative">Content
-                Marketing<span class="glow-effect"></span></a></li>
-            <li><a href="#services" data-service="social-media"
-                class="service-link text-white/80 hover:text-white transition-all duration-300 px-4 py-2 -mx-4 rounded-lg relative">Social
-                Media<span class="glow-effect"></span></a></li>
-          </ul>
+            <li>
+                <a href="#services" data-service="digital-strategy"
+                    class="service-link relative text-white/80 hover:text-white transition-all duration-300 px-4 py-2 -mx-4
+                           after:content-[''] after:absolute after:left-1/2 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full hover:after:left-0">
+                    Digital Strategy
+                </a>
+            </li>
+            <li>
+                <a href="#services" data-service="brand-development"
+                    class="service-link relative text-white/80 hover:text-white transition-all duration-300 px-4 py-2 -mx-4
+                           after:content-[''] after:absolute after:left-1/2 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full hover:after:left-0">
+                    Brand Development
+                </a>
+            </li>
+            <li>
+                <a href="#services" data-service="content-marketing"
+                    class="service-link relative text-white/80 hover:text-white transition-all duration-300 px-4 py-2 -mx-4
+                           after:content-[''] after:absolute after:left-1/2 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full hover:after:left-0">
+                    Content Marketing
+                </a>
+            </li>
+            <li>
+                <a href="#services" data-service="social-media"
+                    class="service-link relative text-white/80 hover:text-white transition-all duration-300 px-4 py-2 -mx-4
+                           after:content-[''] after:absolute after:left-1/2 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full hover:after:left-0">
+                    Social Media
+                </a>
+            </li>
+        </ul>
+        
         </div>
         <style>
           .service-link.active {
@@ -1214,6 +1329,37 @@
       updateActiveSection();
     });
   </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const toggleBtn = document.getElementById("darkModeToggle");
+      const body = document.body;
+      const themeIcon = document.getElementById("theme-icon");
+
+      // Apply dark mode if previously enabled
+      if (localStorage.getItem("darkMode") === "enabled") {
+        body.classList.add("dark-mode");
+        themeIcon.classList.remove("ri-moon-line");
+        themeIcon.classList.add("ri-sun-line"); // Change to sun icon
+      }
+
+      toggleBtn.addEventListener("click", function () {
+        body.classList.toggle("dark-mode");
+
+        if (body.classList.contains("dark-mode")) {
+          localStorage.setItem("darkMode", "enabled");
+          themeIcon.classList.remove("ri-moon-line");
+          themeIcon.classList.add("ri-sun-line"); // Change to sun icon
+        } else {
+          localStorage.setItem("darkMode", "disabled");
+          themeIcon.classList.remove("ri-sun-line");
+          themeIcon.classList.add("ri-moon-line"); // Change to moon icon
+        }
+      });
+    });
+  </script>
+
+
+
 </body>
 
 </html>
